@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Map Columns to Lead Fields</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="csv_data" value="{{ csv_data }}">
+
+    <h4>Required Fields <span style="color:red">*</span></h4>
+    {% for field in required_fields %}
+      <div class="form-group">
+        <label for="{{ field }}"><strong>{{ field|title }}</strong> <span style="color:red">*</span></label>
+        <select name="mapping_{{ field }}" class="form-control" required>
+          <option value="">-- Select Column --</option>
+          {% for column in columns %}
+            <option value="{{ column }}">{{ column }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+
+    <h4 class="mt-4">Optional Fields</h4>
+    {% for field in optional_fields %}
+      <div class="form-group">
+        <label for="{{ field }}">{{ field|title }}</label>
+        <select name="mapping_{{ field }}" class="form-control">
+          <option value="">-- Select Column --</option>
+          {% for column in columns %}
+            <option value="{{ column }}">{{ column }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+
+    <button type="submit" name="submit_mapping" class="btn btn-primary mt-3">Import Leads</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<div class="card">
+  <div class="card-header"><strong>
+    	{{ customer_record.full_name }}
+  </strong></div>
+  <div class="card-body">
+
+    <p class="card-text">
+      <strong>Email: </strong>{{ customer_record.email }}
+    </p>
+    <p class="card-text">
+      <strong>Phone: </strong>{{ customer_record.phone }}
+    </p>
+    <p class="card-text">
+      <strong>Country: </strong>{{ customer_record.country }}
+    </p>
+    <p class="card-text">
+      <strong>Timezone: </strong>{{ customer_record.timezone }}
+    </p>
+    <p class="card-text">
+      <strong>Income Range: </strong>{{ customer_record.income_range }}
+    </p>
+    <p class="card-text">
+      <strong>Agent: </strong>{{ customer_record.agent }}
+    </p>
+    <p class="card-text">
+      <strong>General Comment: </strong>{{ customer_record.comment }}
+    </p>
+    <p class="card-text">
+      <strong>Agent Comment: </strong>{{ customer_record.agent_comment }}
+    </p>
+    <p class="card-text">
+      <strong>Manager Comment: </strong>{{ customer_record.manager_comment }}
+    </p>
+    <p class="card-text">
+      <strong>Created At: </strong>{{ customer_record.created_at }}
+    </p>
+    <p class="card-text">
+      <strong>Modified At: </strong>{{ customer_record.modified_at }}
+    </p>
+    <p class="card-text">
+      <strong>ID: </strong>{{ customer_record.id }}
+    </p>
+  </div>
+</div>
+
+<br/>
+
+<h4>Comments</h4>
+<div class="mb-3">
+  {% for comment in comments %}
+    <div class="border rounded p-2 mb-2">
+      <strong>{{ comment.get_role_display }}{% if comment.author %} ({{ comment.author.username }}){% endif %}</strong>
+      <span class="text-muted" style="font-size: 0.9em;">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+      <div>{{ comment.content|linebreaks }}</div>
+    </div>
+  {% empty %}
+    <p>No comments yet.</p>
+  {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+  <form method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" name="add_comment" class="btn btn-primary">Add Comment</button>
+  </form>
+{% endif %}
+
+<br/><br/>
+<a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+{% if user.is_staff %}
+<a href="{% url 'delete_record' customer_record.id %}" class="btn btn-danger">Delete</a>
+{% endif %}
+<a href="{% url 'update_record' customer_record.id %}" class="btn btn-secondary">Update Record</a>
+		
+
+{% endblock %}
